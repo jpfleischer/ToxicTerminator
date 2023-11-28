@@ -23,3 +23,6 @@ trie to find if the inputted word is a bad word.
 if you dont have make, and you dont have chocolatey,
 you can get chocolatey https://chocolatey.org/
 and then say `choco install make mingw -y`
+
+presently you must have wsl to compile the
+cpp -> python

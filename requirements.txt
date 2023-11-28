@@ -1,0 +1,3 @@
+Flask
+cloudmesh-common
+pybind11[global]

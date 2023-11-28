@@ -21,15 +21,29 @@
         <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Based Filter To Identify Explicit Content.</h1>
 
         <div class="form-floating">
-          <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-          <label for="floatingTextarea2">Enter message here...</label>
-        </div>
+          <form action="/" method="post">
+            <textarea class="form-control" 
+                      placeholder="Leave a comment here" 
+                      id="floatingTextarea2" 
+                      style="height: 100px"
+                      name="message-contents"></textarea>
+            <label for="floatingTextarea2">Enter message here...</label>
+          </div>
+
+          
+            <button name="forwardBtn" 
+                    type="submit"
+                    class="btn btn-primary"
+                    style="margin-top: 20px;">Submit</button>
+        </form>
+        {{ forward_message }}
+        <!-- </form> -->
 
       </div>
 
       <div class="col-lg-6">
         <img src="{{ url_for('static', filename='controller.png') }}" class="d-block mx-lg-auto img-fluid controller-img" alt="Extra Picture" loading="lazy">
-        <img src="{{ url_for('static', filename='toxicwastee.png') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="450" loading="lazy">
+        <img src="{{ url_for('static', filename='toxicwastee.png') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="450" loading="lazy" style="margin-bottom: 25px">
       </div>
     </div>
   </div>
@@ -127,3 +141,4 @@
 </body>
 
 </html>
+
