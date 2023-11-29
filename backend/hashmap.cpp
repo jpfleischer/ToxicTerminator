@@ -102,7 +102,8 @@ int main()
 {
     std::cout << "hey\n";
     hashmap ha = hashmap();
-    ha.test("fuck");
+    ha.test("fuck"); // adds to 425
     ha.test("goodietwoshoes");
     ha.test("hahahahahahahaha");
+    ha.test("lamo"); // adds to 425
 }
