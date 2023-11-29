@@ -1,4 +1,7 @@
 compile:
+	g++ hashmap.cpp -o hashmap.exe
+
+wsl:
 	. ~/ENV3/bin/activate ; \
 	which python ; \
 	python3-config --extension-suffix ; \
