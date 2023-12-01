@@ -1,8 +1,20 @@
 from flask import Flask, render_template, request
-import sys
-import os
-sys.path.insert(0, '')
-from backend import trie
+# import sys
+# import os
+# sys.path.insert(0, '')
+# from backend import trie
+
+from cloudmesh.common.util import readfile
+import cppyy
+
+trie_cpp_file_contents = readfile('backend/trie_cpy.cpp')
+
+cppyy.cppdef(trie_cpp_file_contents)
+from cppyy.gbl import trie
+trie_obj = trie()
+# trie_obj.buildtrieFromBadWordsFile("")
+trie_obj.main("bad-words.txt")
+
 
 app = Flask(__name__)
 
