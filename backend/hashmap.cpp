@@ -2,8 +2,9 @@
 #include <random>
 #include <fstream>
 #include <forward_list>
-#include <string>
+#include <algorithm>
 #include <cctype>
+#include <string>
 
 class hashmap
 {
@@ -58,17 +59,25 @@ public:
         }
     }
 
-    bool search(std::string &word)
+    bool search(const std::string &word)
     {
-        // Set the chars in a string to lowercase.
-        for (char &newChar : word) {
-            newChar = std::tolower(newChar);
-        }
+        std::string lower_word = word;
+        std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
+                       [](unsigned char c)
+                       { return std::tolower(c); });
+
+        lower_word.erase(0, lower_word.find_first_not_of("\n\r"));
+        lower_word.erase(lower_word.find_last_not_of("\n\r") + 1);
+
+        // // Set the chars in a string to lowercase.
+        // for (char &newChar : word) {
+        //     newChar = std::tolower(newChar);
+        // }
         
         int asciiSum = 0; // calculate the hash value for the given word
-        for (int i = 0; i < word.length(); i++)
+        for (int i = 0; i < lower_word.length(); i++)
         {
-            asciiSum += (int)word[i];
+            asciiSum += (int)lower_word[i];
         }
 
         // calculate the index within the valid range of sepChainMap size
@@ -77,7 +86,7 @@ public:
         // check each element in the forward list at the calculated index
         for (const auto &entry : sepChainMap.at(index))
         {
-            if (entry == word)
+            if (entry == lower_word)
             {
                 return true; // found
             }
@@ -110,6 +119,7 @@ int main()
     std::cout << "hey\n";
     hashmap ha = hashmap();
     ha.test("fuck"); // adds to 425
+    ha.test("FUCK"); // adds to 425
     ha.test("goodietwoshoes");
     ha.test("hahahahahahahaha");
     ha.test("lamo"); // adds to 425

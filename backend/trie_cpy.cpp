@@ -1,5 +1,5 @@
-
-
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
@@ -33,8 +33,16 @@ public:
     }
 
     bool search(const std::string& word) {
+        std::string lower_word = word;
+        std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
+                       [](unsigned char c)
+                       { return std::tolower(c); });
+
+        lower_word.erase(0, lower_word.find_first_not_of("\n\r"));
+        lower_word.erase(lower_word.find_last_not_of("\n\r") + 1);
+
         trieNode* current = root;
-        for (char ch : word) {
+        for (char ch : lower_word) {
             // each character in the word given in main
             if (current->children.find(ch) == current->children.end()) {
                 // not found

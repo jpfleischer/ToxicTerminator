@@ -1,3 +1,7 @@
+test:
+	g++ hashmap.cpp -o hashmap.exe
+	./hashmap.exe
+
 compile:
 	g++ hashmap.cpp -o hashmap.exe
 
