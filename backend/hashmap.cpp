@@ -17,16 +17,12 @@ public:
         // SEPCHAINMAP IS THE HASHMAP
         sepChainMap = std::vector<std::forward_list<std::string>>(1000);
 
-        // Setting up random number stuff.
-        std::random_device rd;
-        gen = std::mt19937(rd());
-        distribution = std::uniform_int_distribution<int>(0, 626493);
+        
     }
     
     std::vector<std::string> messageVector;
     std::vector<std::forward_list<std::string>> sepChainMap;
-    std::mt19937 gen;
-    std::uniform_int_distribution<int> distribution;
+    
     int asciiSum;
 
     void buildHashmap(const std::string &filename)
