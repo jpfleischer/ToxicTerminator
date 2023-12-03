@@ -63,8 +63,11 @@ public:
     bool search(const std::string &message)
     {
         std::istringstream iss(message);
-        std::string word = message;
 
+        std::string word;
+        std::vector<std::string> words;
+
+        // Split the message into individual words
         while (iss >> word)
         {
             std::transform(word.begin(), word.end(), word.begin(),
@@ -78,31 +81,43 @@ public:
 
             if (!word.empty())
             {
-                // // Set the chars in a string to lowercase.
-                // for (char &newChar : message) {
-                //     newChar = std::tolower(newChar);
-                // }
+                words.push_back(word);
+            }
+        }
 
-                int asciiSum = 0; // calculate the hash value for the given message
-                for (int i = 0; i < word.length(); i++)
+        // Check phrases starting from each word in the message
+        for (size_t i = 0; i < words.size(); ++i)
+        {
+            for (size_t j = i; j < words.size(); ++j)
+            {
+                std::string phrase;
+                for (size_t k = i; k <= j; ++k)
                 {
-                    asciiSum += (int)word[i];
-                }
-
-                // calculate the index within the valid range of sepChainMap size
-                int index = asciiSum % sepChainMap.size();
-
-                // check each element in the forward list at the calculated index
-                for (const auto &entry : sepChainMap.at(index))
-                {
-                    if (entry == word)
+                    phrase += words[k];
+                    if (k != j)
                     {
-                        return true; // found
+                        phrase += " ";
+                    }
+
+                    int asciiSum = 0; // calculate the hash value for the given phrase
+                    for (char c : phrase)
+                    {
+                        asciiSum += static_cast<int>(c);
+                    }
+
+                    int index = asciiSum % sepChainMap.size();
+
+                    // check each element in the forward list at the calculated index
+                    for (const auto &entry : sepChainMap.at(index))
+                    {
+                        if (entry == phrase)
+                        {
+                            return true; // found
+                        }
                     }
                 }
             }
         }
-        // it never returned true, therefore, no bad words!
         return false; // not found
     }
 

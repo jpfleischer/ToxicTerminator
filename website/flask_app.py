@@ -43,7 +43,7 @@ def query():
             trie_object = trie.trie()
             print('trie')
             print(trie_object)
-            trie_object.buildtrieFromBadWordsFile("bad-words.txt")
+            trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
             it_is_bad = trie_object.search(message_content)
             StopWatch.stop('trie')
             time = StopWatch.get('trie')

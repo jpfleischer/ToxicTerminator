@@ -6,95 +6,88 @@
 #include <string>
 #include <sstream>
 
-class trieNode {
+class trieNode
+{
 public:
-    std::unordered_map<char, trieNode*> children;
-    bool is_end_of_word;
+    std::unordered_map<char, trieNode *> children;
+    bool is_end_of_phrase;
 
-    trieNode() : is_end_of_word(false) {}
+    trieNode() : is_end_of_phrase(false) {}
 };
 
-class trie {
+class trie
+{
 private:
-    trieNode* root;
+    trieNode *root;
 
 public:
-    trie() {
+    trie()
+    {
         root = new trieNode();
     }
 
-    void insert(const std::string& word) {
-        trieNode* current = root;
-        for (char ch : word) {
-            if (current->children.find(ch) == current->children.end()) {
+    void insert(const std::string &phrase)
+    {
+        trieNode *current = root;
+        for (char ch : phrase)
+        {
+            if (current->children.find(ch) == current->children.end())
+            {
                 current->children[ch] = new trieNode();
             }
             current = current->children[ch];
         }
-        current->is_end_of_word = true;
+        current->is_end_of_phrase = true;
     }
 
     bool search(const std::string &message)
     {
-        std::istringstream iss(message);
-        std::string word;
+        std::string lowercase_msg = message;
+        std::transform(lowercase_msg.begin(), lowercase_msg.end(), lowercase_msg.begin(),
+                       [](unsigned char c)
+                       { return std::tolower(c); });
 
-        while (iss >> word)
+        for (int i = 0; i < lowercase_msg.length(); ++i)
         {
-            std::transform(word.begin(), word.end(), word.begin(),
-                           [](unsigned char c)
-                           { return std::tolower(c); });
-
-            // Remove special characters like newline characters
-            word.erase(std::remove_if(word.begin(), word.end(), [](char c)
-                                      { return !std::isalnum(c); }),
-                       word.end());
-
-            if (!word.empty())
+            trieNode *current = root;
+            for (int j = i; j < lowercase_msg.length(); ++j)
             {
-                if (searchWord(word))
+                char ch = lowercase_msg[j];
+                if (current->children.find(ch) == current->children.end())
                 {
-                    return true; // Found a bad word
+                    break;
+                }
+                current = current->children[ch];
+                if (current->is_end_of_phrase && (j + 1 == lowercase_msg.length() || lowercase_msg[j + 1] == ' '))
+                {
+                    return true; // Found a bad phrase
                 }
             }
         }
-
-        return false; // No bad words found in the entire message
+        return false; // No bad phrases found in the entire message
     }
 
-    bool searchWord(const std::string &word)
+    void buildTrieFromBadPhrasesFile(const std::string &filename)
     {
-        trieNode *current = root;
-        for (char ch : word)
-        {
-            if (current->children.find(ch) == current->children.end())
-            {
-                return false; // Not found
-            }
-            current = current->children[ch];
-        }
-        return current != nullptr && current->is_end_of_word;
-    }
-
-    void buildtrieFromBadWordsFile(const std::string& filename) {
         std::ifstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "please download make for windows using chocolatey and then try the command 'make'\n";
+        if (!file.is_open())
+        {
+            std::cerr << "File open error\n";
             return;
         }
-        
-        std::string word;
-        while (std::getline(file, word))
-        {
-            if (word.empty())
-                continue;
 
-            insert(word);
+        std::string phrase;
+        while (std::getline(file, phrase))
+        {
+            if (phrase.empty())
+            {
+                continue;
+            }
+            insert(phrase);
         }
         file.close();
     }
 };
-
 // int main()
 // {
 //     trie trie;
