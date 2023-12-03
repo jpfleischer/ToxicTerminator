@@ -5,7 +5,7 @@ from flask import Flask, render_template, request
 # from backend import trie
 
 from cloudmesh.common.util import readfile
-# from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.StopWatch import StopWatch
 # StopWatch.start('mytimer')
 # # 
 # StopWatch.stop('mytimer')
@@ -38,18 +38,21 @@ def query():
         selected_option = request.form['data-structure']  # Get the selected radio button value
         print('!!!!!!!!!!!!!!', selected_option)
         if selected_option == 'trie':
+            StopWatch.start('trie')
             # Handle processing with Trie
             trie_object = trie.trie()
             print('trie')
             print(trie_object)
             trie_object.buildtrieFromBadWordsFile("bad-words.txt")
             it_is_bad = trie_object.search(message_content)
-            return_message = 'BAD WORD! NAUGHTY! 👿' if it_is_bad else 'Not a bad word! You are so nice 😇'
+            StopWatch.stop('trie')
+            time = StopWatch.get('trie')
+            return_message = f'BAD WORD! NAUGHTY! 👿 Seconds: {time}' if it_is_bad else f'Not a bad word! You are so nice 😇 Seconds: {time}'
 
         elif selected_option == 'hashmap':
             # Handle processing with Hash Map or any other logic
             # ...
-
+            StopWatch.start('hashmap')
             hash_obj = hashmap.hashmap()
             print("HAAAAASH!")
             print(hash_obj)
@@ -57,7 +60,9 @@ def query():
             print('debugging')
             print(message_content)
             it_is_bad = hash_obj.search(message_content)
-            return_message = 'BAD WORD! NAUGHTY! 👿' if it_is_bad else 'Not a bad word! You are so nice 😇'
+            StopWatch.stop('hashmap') 
+            time = StopWatch.get('hashmap')
+            return_message = f'BAD WORD! NAUGHTY! 👿 Second: {time}' if it_is_bad else f'Not a bad word! You are so nice 😇 Seconds: {time}'
 
         return return_message
 
