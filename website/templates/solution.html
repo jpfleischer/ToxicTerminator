@@ -80,6 +80,13 @@
         }
       });
     });
+        // Trigger submit button click when Enter key is pressed in the textarea
+    $(".message-contents").keydown(function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Prevent default Enter key behavior (new line in textarea)
+        $(".forwardBtn").click(); // Simulate click on the submit button
+      }
+    });
   });
 </script>
 

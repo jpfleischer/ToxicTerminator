@@ -1,11 +1,9 @@
-#include <pybind11/pybind11.h>
-
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
-
-
-namespace py = pybind11;
+#include <string>
 
 class trieNode {
 public:
@@ -36,8 +34,16 @@ public:
     }
 
     bool search(const std::string& word) {
+        std::string lower_word = word;
+        std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
+                       [](unsigned char c)
+                       { return std::tolower(c); });
+
+        lower_word.erase(0, lower_word.find_first_not_of("\n\r"));
+        lower_word.erase(lower_word.find_last_not_of("\n\r") + 1);
+
         trieNode* current = root;
-        for (char ch : word) {
+        for (char ch : lower_word) {
             // each character in the word given in main
             if (current->children.find(ch) == current->children.end()) {
                 // not found
@@ -56,7 +62,11 @@ public:
         }
         
         std::string word;
-        while (file >> word) {
+        while (std::getline(file, word))
+        {
+            if (word.empty())
+                continue;
+
             insert(word);
         }
         file.close();
@@ -90,19 +100,3 @@ public:
     }
 };
 
-
-
-PYBIND11_MODULE(trie, module)
-{
-    module.doc() = "yerr";
-    // module.def("say_hello", &say_hello);
-
-    py::class_<trie>(module, "trie")
-        .def(py::init<>())
-        // .def(pybind11::init<>(), "constructor 2", pybind11::arg("x"), pybind11::arg("y"))
-        .def("insert", &trie::insert)
-        .def("search", &trie::search)
-        .def("main", &trie::main)
-        .def("buildtrieFromBadWordsFile", &trie::buildtrieFromBadWordsFile);
-    // m.def("add", &add, "A function that adds two numbers");
-}

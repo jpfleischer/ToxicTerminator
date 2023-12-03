@@ -5,9 +5,14 @@ from flask import Flask, render_template, request
 # from backend import trie
 
 from cloudmesh.common.util import readfile
+# from cloudmesh.common.StopWatch import StopWatch
+# StopWatch.start('mytimer')
+# # 
+# StopWatch.stop('mytimer')
+# StopWatch.benchmark()
 import cppyy
 
-trie_cpp_file_contents = readfile('backend/trie_cpy.cpp')
+trie_cpp_file_contents = readfile('backend/trie.cpp')
 hash_file_contents = readfile('backend/hashmap.cpp')
 
 cppyy.cppdef(trie_cpp_file_contents)
@@ -45,6 +50,8 @@ def query():
             print("HAAAAASH!")
             print(hash_obj)
             hash_obj.buildHashmap("bad-words.txt")
+            print('debugging')
+            print(message_content)
             it_is_bad = hash_obj.search(message_content)
             return_message = 'BAD WORD! NAUGHTY! 👿' if it_is_bad else 'Not a bad word! You are so nice 😇'
 
