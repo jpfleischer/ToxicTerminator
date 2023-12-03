@@ -12,11 +12,15 @@ from cloudmesh.common.util import readfile
 # StopWatch.benchmark()
 import cppyy
 
+
 trie_cpp_file_contents = readfile('backend/trie.cpp')
 hash_file_contents = readfile('backend/hashmap.cpp')
 
+print('hello.')
 cppyy.cppdef(trie_cpp_file_contents)
+print('i am testing.')
 cppyy.cppdef(hash_file_contents)
+print('i made it through.')
 
 from cppyy.gbl import trie, hashmap
 # trie_obj = trie()
@@ -63,5 +67,11 @@ def query():
 def hello_world():
 
     return render_template('solution.html')
+
+
+@app.route('/game-comparison', methods=['POST', 'GET'])
+def game():
+
+    return render_template('game.html')
 
 
