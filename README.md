@@ -3,6 +3,9 @@
 setup is simple. the only prerequisite
 is chocolatey https://chocolatey.org/
 
+Then open a terminal. Git Bash is the best but
+Powershell works just as well (run as Administrator)
+
 ```bash
 choco install make git python visualstudio2019buildtools visualstudio2019-workload-vctools -y
 
@@ -19,3 +22,5 @@ make
 
 make serve
 ```
+
+Then open a browser and go to 127.0.0.1:5000
