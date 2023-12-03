@@ -12,7 +12,7 @@ public:
         // Initialization of the members in the constructor
         messageVector = std::vector<std::string>();
         // SEPCHAINMAP IS THE HASHMAP
-        sepChainMap = std::vector<std::forward_list<std::string>>(13672);
+        sepChainMap = std::vector<std::forward_list<std::string>>(1000);
 
         // Setting up random number stuff.
         std::random_device rd;
