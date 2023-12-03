@@ -1,6 +1,7 @@
 from cloudmesh.common.util import readfile
 import pandas as pd
 import cppyy
+import random
 
 # Read the C++ files
 trie_cpp_file_contents = readfile('backend/trie.cpp')
@@ -53,6 +54,18 @@ def process_messages_route():
     print(f'True Count: {true_count}, False Count: {false_count}')
     percent = (true_count / num_msgs) * 100  # Convert to percentage
     print(f'Bad words are {percent:.2f}% of {num_msgs} total messages')  # Display as percentage with 2 decimal places
+
+    # Get indices of True messages
+    true_indices = df[df['message'].apply(check_message_with_trie)].index.tolist()
+
+    # Randomly select 10 indices
+    random_true_indices = random.sample(true_indices, min(10, len(true_indices)))
+
+    # Print the selected messages
+    print("\nTen random messages that were flagged as 'True':")
+    for index in random_true_indices:
+        print(df.loc[index, 'message'])
+
 
 if __name__ == "__main__":
     process_messages_route()

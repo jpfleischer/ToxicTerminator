@@ -58,7 +58,9 @@ public:
                     break;
                 }
                 current = current->children[ch];
-                if (current->is_end_of_phrase && (j + 1 == lowercase_msg.length() || lowercase_msg[j + 1] == ' '))
+                if (current->is_end_of_phrase &&
+                    (j + 1 == lowercase_msg.length() || !isalpha(lowercase_msg[j + 1])) &&
+                    (i == 0 || !isalpha(lowercase_msg[i - 1])))
                 {
                     return true; // Found a bad phrase
                 }

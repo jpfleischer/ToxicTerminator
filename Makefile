@@ -12,6 +12,12 @@ run:
 	# g++ -o trie backend/trie.cpp
 	# ./trie
 
+test:
+	# g++ hashmap.cpp -o hashmap.exe
+	# ./hashmap.exe
+	g++ backend/trie.cpp -o backend/trie.exe
+	backend/trie.exe
+
 serve:
 	flask --app website/flask_app --debug run
 	# python website/run.py

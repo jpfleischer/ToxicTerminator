@@ -45,6 +45,7 @@ def query():
             print(trie_object)
             trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
             it_is_bad = trie_object.search(message_content)
+            print(message_content, f'BAD WORD: {it_is_bad}')
             StopWatch.stop('trie')
             time = StopWatch.get('trie')
             return_message = f'BAD WORD! NAUGHTY! 👿 Seconds: {time}' if it_is_bad else f'Not a bad word! You are so nice 😇 Seconds: {time}'
