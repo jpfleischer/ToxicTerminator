@@ -3,6 +3,7 @@
 #include <fstream>
 #include <forward_list>
 #include <string>
+#include <cctype>
 
 class hashmap
 {
@@ -84,6 +85,12 @@ public:
     {
         buildHashmap("../bad-words.txt");
         std::string wordToSearch = word;
+
+        // Set the chars in a string to lowercase.
+        for (char &newChar : wordToSearch) {
+            newChar = std::tolower(newChar);
+        }
+
         bool isBadWord = search(wordToSearch);
 
         if (isBadWord)
