@@ -12,43 +12,77 @@
 
 <body>
 
-
 <!-- Title -->
 <section id="title" class="gradient-background">
   <div class="container col-xxl-8 px-4 pt-5">
     <div class="row align-items-center g-5 pt-5">
-      <div class="col-lg-6">
+
+      <div class="col-lg-2">
+        <div class="form-check">
+          <input class="form-check-input btn-lg data-structure" type="radio" name="data-structure" id="trie"
+            value="trie" checked>
+          <label class="form-check-label fs-5" for="trie">
+            Trie
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input btn-lg data-structure" type="radio" name="data-structure" id="hashmap"
+            value="hashmap">
+          <label class="form-check-label fs-5" for="hashmap">
+            Hash Map
+          </label>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
         <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Based Filter To Identify Explicit Content.</h1>
 
         <div class="form-floating">
-          <form action="/" method="post">
-            <!-- type whatever we want into this text box -->
-            <textarea class="form-control" 
-                      placeholder="Enter your gamer message..." 
-                      id="floatingTextarea2" 
-                      style="height: 100px"
-                      name="message-contents"></textarea>
-            <label for="floatingTextarea2">Enter your text in the above box!</label>
-          </div>
+          <textarea class="form-control message-contents" placeholder="Enter your gamer message..."
+            id="floatingTextarea2" style="height: 100px"></textarea>
+          <label for="floatingTextarea2">Enter your gamer message...</label>
+        </div>
 
-          
-            <button name="forwardBtn" 
-                    type="submit"
-                    class="btn btn-primary"
-                    style="margin-top: 20px;">Submit</button>
-        </form>
-        {{ forward_message }}
-        <!-- </form> -->
+        <button class="btn btn-primary forwardBtn" style="margin-top: 20px;">Submit</button>
+
+        <div class="forward-message"></div>
 
       </div>
 
-      <div class="col-lg-6">
-        <img src="{{ url_for('static', filename='controller.png') }}" class="d-block mx-lg-auto img-fluid controller-img" alt="Extra Picture" loading="lazy">
-        <img src="{{ url_for('static', filename='toxicwastee.png') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="450" loading="lazy" style="margin-bottom: 25px">
+      <div class="col-lg-5">
+        <img src="{{ url_for('static', filename='controller.png') }}"
+          class="d-block mx-lg-auto img-fluid controller-img" alt="Extra Picture" loading="lazy">
+        <img src="{{ url_for('static', filename='toxicwastee.png') }}" class="d-block mx-lg-auto img-fluid"
+          alt="Bootstrap Themes" width="300" height="450" loading="lazy" style="margin-bottom: 25px">
       </div>
     </div>
   </div>
 </section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".forwardBtn").click(function (e) {
+      e.preventDefault();
+      $(".forward-message").empty(); // Clear the forward-message content
+      var selectedOption = $(".data-structure:checked").val();
+      var messageContent = $(".message-contents").val();
+
+      $.ajax({
+        type: 'POST',
+        url: '/query',
+        data: {
+          'data-structure': selectedOption,
+          'message-contents': messageContent
+        },
+        success: function (response) {
+          $(".forward-message").html(response);
+        }
+      });
+    });
+  });
+</script>
+
 
 
   <!-- Features -->
