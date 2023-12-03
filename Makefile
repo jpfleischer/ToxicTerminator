@@ -3,11 +3,11 @@ url := https://raw.githubusercontent.com/coffee-and-fun/google-profanity-words/m
 
 run:
 	if [ ! -f "$(file_name)" ]; then \
-        curl -o "$(file_name)" "$(url)"; \
-        echo "'$(file_name)' downloaded"; \
+		curl -o "$(file_name)" "$(url)"; \
+		echo "'$(file_name)' downloaded"; \
 	else \
-        echo "'$(file_name)' already exists"; \
-    fi
+		echo "'$(file_name)' already exists"; \
+	fi
 
 	# g++ -o trie backend/trie.cpp
 	# ./trie
