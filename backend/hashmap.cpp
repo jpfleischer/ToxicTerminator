@@ -58,8 +58,13 @@ public:
         }
     }
 
-    bool search(const std::string &word)
+    bool search(std::string &word)
     {
+        // Set the chars in a string to lowercase.
+        for (char &newChar : word) {
+            newChar = std::tolower(newChar);
+        }
+        
         int asciiSum = 0; // calculate the hash value for the given word
         for (int i = 0; i < word.length(); i++)
         {
@@ -85,11 +90,6 @@ public:
     {
         buildHashmap("../bad-words.txt");
         std::string wordToSearch = word;
-
-        // Set the chars in a string to lowercase.
-        for (char &newChar : wordToSearch) {
-            newChar = std::tolower(newChar);
-        }
 
         bool isBadWord = search(wordToSearch);
 
