@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cctype>
 #include <string>
+#include <sstream>
 
 class hashmap
 {
@@ -59,39 +60,49 @@ public:
         }
     }
 
-    bool search(const std::string &word)
+    bool search(const std::string &message)
     {
-        std::string lower_word = word;
-        std::transform(lower_word.begin(), lower_word.end(), lower_word.begin(),
-                       [](unsigned char c)
-                       { return std::tolower(c); });
+        std::istringstream iss(message);
+        std::string word = message;
 
-        lower_word.erase(0, lower_word.find_first_not_of("\n\r"));
-        lower_word.erase(lower_word.find_last_not_of("\n\r") + 1);
-
-        // // Set the chars in a string to lowercase.
-        // for (char &newChar : word) {
-        //     newChar = std::tolower(newChar);
-        // }
-        
-        int asciiSum = 0; // calculate the hash value for the given word
-        for (int i = 0; i < lower_word.length(); i++)
+        while (iss >> word)
         {
-            asciiSum += (int)lower_word[i];
-        }
+            std::transform(word.begin(), word.end(), word.begin(),
+                           [](unsigned char c)
+                           { return std::tolower(c); });
 
-        // calculate the index within the valid range of sepChainMap size
-        int index = asciiSum % sepChainMap.size();
+            // Remove special characters like newline characters
+            word.erase(std::remove_if(word.begin(), word.end(), [](char c)
+                                      { return !std::isalnum(c); }),
+                       word.end());
 
-        // check each element in the forward list at the calculated index
-        for (const auto &entry : sepChainMap.at(index))
-        {
-            if (entry == lower_word)
+            if (!word.empty())
             {
-                return true; // found
+                // // Set the chars in a string to lowercase.
+                // for (char &newChar : message) {
+                //     newChar = std::tolower(newChar);
+                // }
+
+                int asciiSum = 0; // calculate the hash value for the given message
+                for (int i = 0; i < word.length(); i++)
+                {
+                    asciiSum += (int)word[i];
+                }
+
+                // calculate the index within the valid range of sepChainMap size
+                int index = asciiSum % sepChainMap.size();
+
+                // check each element in the forward list at the calculated index
+                for (const auto &entry : sepChainMap.at(index))
+                {
+                    if (entry == word)
+                    {
+                        return true; // found
+                    }
+                }
             }
         }
-
+        // it never returned true, therefore, no bad words!
         return false; // not found
     }
 
