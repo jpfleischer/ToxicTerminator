@@ -3,10 +3,7 @@ import json
 import threading
 import csv
 import random
-import time
-import sys
-import os
-sys.path.insert(0, '')
+
 
 from cloudmesh.common.util import readfile
 from cloudmesh.common.StopWatch import StopWatch
@@ -17,9 +14,9 @@ import numpy as np
 if os_is_windows():
     import cppyy
 elif os_is_linux():
+    import sys
+    sys.path.insert(0, '/home/toxicterminator/ToxicTerminator')
     from backend import trie
-
-
     
 
 import sys
@@ -57,15 +54,19 @@ def query():
         print('!!!!!!!!!!!!!!', selected_option)
         if selected_option == 'trie':
             StopWatch.start('trie')
+            print('trie')
 
             if os_is_windows():
                 # Handle processing with Trie
                 trie_object = cppyy.gbl.trie()
+                trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
+
             elif os_is_linux():
                 trie_object = trie.trie()
-            print('trie')
-            print(trie_object)
-            trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
+                trie_object.buildTrieFromBadPhrasesFile("/home/toxicterminator/ToxicTerminator/bad-words.txt")
+
+            # print(trie_object)
+            
             it_is_bad = trie_object.search(message_content)
             print(message_content, f'BAD WORD: {it_is_bad}')
             StopWatch.stop('trie')
@@ -76,10 +77,16 @@ def query():
             # Handle processing with Hash Map or any other logic
             # ...
             StopWatch.start('hashmap')
-            hash_obj = cppyy.gbl.hashmap()
             print("HAAAAASH!")
-            print(hash_obj)
-            hash_obj.buildHashmap("bad-words.txt")
+
+            if os_is_windows():
+                hash_obj = cppyy.gbl.hashmap()
+                hash_obj.buildHashmap("bad-words.txt")
+            elif os_is_linux():
+                hash_obj = hashmap.hashmap()
+                hash_obj.buildHashmap("/home/toxicterminator/ToxicTerminator/bad-words.txt")
+            # print(hash_obj)
+            
             print('debugging')
             print(message_content)
             it_is_bad = hash_obj.search(message_content)
