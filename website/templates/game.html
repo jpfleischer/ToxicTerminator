@@ -219,7 +219,18 @@
                 var toxicityLevel = ((parseFloat(percent) / 5) * 100).toFixed(2); // Calculate and round the toxicity level to two decimal points
 
                 console.log("toxiitylevel is ", toxicityLevel);
-                progressBar.css('width', `${toxicityLevel}%`).html(`<br><p style="color:black; margin-bottom:20px">Toxicity: ${toxicityLevel}%</p>`);
+                    // Detect browser and apply different styles
+                var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+                var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+                console.log("is chrome is", isChrome);
+                if (isFirefox) {
+                    progressBar.css('width', `${toxicityLevel}%`).html(`<br><p style="color:black; margin-top:15px">Toxicity: ${toxicityLevel}%</p>`);
+                } else if (isChrome) {
+                    progressBar.css('width', `${toxicityLevel}%`).html(`<br><p style="color:black; margin-bottom:17px">Toxicity: ${toxicityLevel}%</p>`);
+                } else {
+                    // Default styling for other browsers
+                    progressBar.css('width', `${toxicityLevel}%`).html(`<br><p style="color:black; margin-top:1px">Toxicity: ${toxicityLevel}%</p>`);
+                }
 
                 // Update the color of the progress bar based on toxicity level (green to red scale)
                 const color = `hsl(${(1 - toxicityLevel / 100) * 120}, 100%, 50%)`;
