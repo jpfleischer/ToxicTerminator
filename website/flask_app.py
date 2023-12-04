@@ -4,10 +4,9 @@ import threading
 import csv
 import random
 import time
-# import sys
-# import os
-# sys.path.insert(0, '')
-# from backend import trie
+import sys
+import os
+sys.path.insert(0, '')
 
 from cloudmesh.common.util import readfile
 from cloudmesh.common.StopWatch import StopWatch
@@ -17,7 +16,10 @@ import numpy as np
 
 if os_is_windows():
     import cppyy
-# elif os_is_linux():
+elif os_is_linux():
+    from backend import trie
+
+
     
 
 import sys
@@ -56,8 +58,11 @@ def query():
         if selected_option == 'trie':
             StopWatch.start('trie')
 
-            # Handle processing with Trie
-            trie_object = cppyy.gbl.trie()
+            if os_is_windows():
+                # Handle processing with Trie
+                trie_object = cppyy.gbl.trie()
+            elif os_is_linux():
+                trie_object = trie.trie()
             print('trie')
             print(trie_object)
             trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
