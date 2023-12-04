@@ -1,4 +1,6 @@
 import requests
+import os
+import csv
 
 # Define the URLs and corresponding file names in a dictionary
 url_dict = {
@@ -22,4 +24,19 @@ def download_file(url, file_name):
 
 # Loop through the URL dictionary and download the files
 for url, file_name in url_dict.items():
-    download_file(url, file_name)
+    if not os.path.exists(file_name):
+        download_file(url, file_name)
+
+    # After downloading, create a short version of the file with only the first 100 lines
+    with open(file_name, 'r', encoding='utf-8') as original_file:
+        reader = csv.reader(original_file)
+        short_file_name = file_name.replace('.csv', '-short.csv')
+        with open(short_file_name, 'w', newline='', encoding='utf-8') as short_file:
+            writer = csv.writer(short_file)
+            for _ in range(100):
+                try:
+                    row = next(reader)
+                    writer.writerow(row)
+                except StopIteration:
+                    break
+    print(f"Short file '{short_file_name}' created successfully.")

@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, Response, jsonify
 import json
 import threading
+import csv
+import random
+import time
 # import sys
 # import os
 # sys.path.insert(0, '')
@@ -15,9 +18,6 @@ import cppyy
 import sys
 # caution: path[0] is reserved for script path (or '' in REPL)
 sys.path.insert(1, '.')
-
-
-
 
 
 # trie_obj = trie()
@@ -149,3 +149,29 @@ def live_updates(game, data_structure):
         yield "data: END!\n\n"
 
     return Response(generate(), content_type='text/event-stream')
+
+@app.route('/get-random-message/<game_id>')
+def get_random_message(game_id):
+    print('who dares enter')
+    # Define the file paths for each game's CSV
+    game_csv_paths = {
+        'tf2': 'backend/chats/tf2100k-short.csv',
+        'minecraft': 'backend/chats/minecraft260k-short.csv',
+        'dota2': 'backend/chats/dota2-620k-short.csv'
+    }
+
+    if game_id in game_csv_paths:
+        csv_path = game_csv_paths[game_id]
+        # Read the first 100 lines of the CSV file using DictReader
+        with open(csv_path, 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            messages = []
+            for idx, row in enumerate(reader):
+                if idx < 100:
+                    messages.append(row['message'])
+
+            if messages:
+                random_message = random.choice(messages)
+                return jsonify({'message': random_message})
+    
+    return jsonify({'message': 'Invalid game ID or no messages found'})
