@@ -14,11 +14,18 @@ import sys
 
 class chatReader:
     def __init__(self, choice: str, structure: str="both"):
-        choices = {
-            'Team Fortress 2': "tf2100k.csv",
-            'Minecraft': "minecraft260k.csv",
-            'Dota 2': "dota2-620k.csv",
-        }
+        if os_is_windows():
+            choices = {
+                'Team Fortress 2': "tf2100k.csv",
+                'Minecraft': "minecraft260k.csv",
+                'Dota 2': "dota2-620k.csv",
+            }
+        else:
+            choices = {
+                'Team Fortress 2': "/home/toxicterminator/ToxicTerminator/backend/chats/tf2100k.csv",
+                'Minecraft': "/home/toxicterminator/ToxicTerminator/backend/chats/minecraft260k.csv",
+                'Dota 2': "/home/toxicterminator/ToxicTerminator/backend/chats/dota2-620k.csv",
+            }
         if choice not in choices:
             raise KeyError("please choose Team Fortress 2, " \
                            "Minecraft, or Dota 2.")
