@@ -158,9 +158,9 @@ PYBIND11_MODULE(hashmap, module)
     py::class_<hashmap>(module, "hashmap")
         .def(py::init<>())
         // .def(pybind11::init<>(), "constructor 2", pybind11::arg("x"), pybind11::arg("y"))
-        .def("insert", &hashmap::insert)
+        // .def("insert", &hashmap::insert)
         .def("search", &hashmap::search)
-        .def("main", &hashmap::main)
+        // .def("main", &hashmap::main)
         .def("buildHashmap", &hashmap::buildHashmap);
     // m.def("add", &add, "A function that adds two numbers");
 }

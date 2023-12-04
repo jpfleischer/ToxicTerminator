@@ -141,7 +141,7 @@ PYBIND11_MODULE(trie, module)
         // .def(pybind11::init<>(), "constructor 2", pybind11::arg("x"), pybind11::arg("y"))
         .def("insert", &trie::insert)
         .def("search", &trie::search)
-        .def("main", &trie::main)
+        // .def("main", &trie::main)
         .def("buildTrieFromBadPhrasesFile", &trie::buildTrieFromBadPhrasesFile);
     // m.def("add", &add, "A function that adds two numbers");
 }
