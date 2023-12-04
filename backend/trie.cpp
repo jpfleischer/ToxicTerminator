@@ -29,6 +29,7 @@ public:
     void insert(const std::string &phrase)
     {
         trieNode *current = root;
+        // make a new trieNode for each character in the phrase
         for (char ch : phrase)
         {
             if (current->children.find(ch) == current->children.end())
@@ -42,14 +43,19 @@ public:
 
     bool search(const std::string &message)
     {
+        // transform the message into lowercase,
+        // because the bad words are all in lowercase.
         std::string lowercase_msg = message;
         std::transform(lowercase_msg.begin(), lowercase_msg.end(), lowercase_msg.begin(),
                        [](unsigned char c)
                        { return std::tolower(c); });
 
+        // create a trieNode for each character.
         for (int i = 0; i < lowercase_msg.length(); ++i)
         {
             trieNode *current = root;
+            // iterate from the current position to find any words with
+            // spaces
             for (int j = i; j < lowercase_msg.length(); ++j)
             {
                 char ch = lowercase_msg[j];
@@ -58,15 +64,16 @@ public:
                     break;
                 }
                 current = current->children[ch];
+                // this accounts for words such as "class" (because ass is bad)
                 if (current->is_end_of_phrase &&
                     (j + 1 == lowercase_msg.length() || !isalpha(lowercase_msg[j + 1])) &&
                     (i == 0 || !isalpha(lowercase_msg[i - 1])))
                 {
-                    return true; // Found a bad phrase
+                    return true; // found a bad phrase
                 }
             }
         }
-        return false; // No bad phrases found in the entire message
+        return false; // no bad phrases found in the entire message
     }
 
     void buildTrieFromBadPhrasesFile(const std::string &filename)
@@ -74,7 +81,7 @@ public:
         std::ifstream file(filename);
         if (!file.is_open())
         {
-            std::cerr << "File open error\n";
+            std::cerr << "COULD NOT OPEN BAD WORDS\n";
             return;
         }
 

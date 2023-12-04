@@ -12,7 +12,7 @@ class hashmap
 public:
     hashmap()
     {
-        // Initialization of the members in the constructor
+        // initialization of the members in the constructor
         messageVector = std::vector<std::string>();
         // SEPCHAINMAP IS THE HASHMAP
         sepChainMap = std::vector<std::forward_list<std::string>>(1000);
@@ -63,14 +63,14 @@ public:
         std::string word;
         std::vector<std::string> words;
 
-        // Split the message into individual words
+        // split the message into individual words
         while (iss >> word)
         {
             std::transform(word.begin(), word.end(), word.begin(),
                            [](unsigned char c)
                            { return std::tolower(c); });
 
-            // Remove special characters like newline characters
+            // remove special characters like newline characters
             word.erase(std::remove_if(word.begin(), word.end(), [](char c)
                                       { return !std::isalnum(c); }),
                        word.end());
@@ -81,7 +81,7 @@ public:
             }
         }
 
-        // Check phrases starting from each word in the message
+        // check phrases starting from each word in the message
         for (size_t i = 0; i < words.size(); ++i)
         {
             for (size_t j = i; j < words.size(); ++j)

@@ -109,6 +109,11 @@ def game():
 
     return render_template('game.html')
 
+@app.route('/about', methods=['POST', 'GET'])
+def about():
+
+    return render_template('about.html')
+
 
 @app.route('/calculate-toxicity', methods=['POST'])
 def calculate_toxicity():
