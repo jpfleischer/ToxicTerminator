@@ -1,3 +1,4 @@
 Flask
 cloudmesh-common
-cppyy
+cppyy; platform_system == "Windows"
+pybind11; sys_platform == "linux"
