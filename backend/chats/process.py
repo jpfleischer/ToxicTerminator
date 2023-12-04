@@ -1,7 +1,14 @@
 from cloudmesh.common.util import readfile
 from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.systeminfo import os_is_windows, os_is_linux
 import pandas as pd
-import cppyy
+if os_is_windows():
+    import cppyy
+elif os_is_linux():
+    import sys
+    sys.path.insert(0, '/home/toxicterminator/ToxicTerminator')
+    from backend import trie
+    from backend import hashmap
 import random
 import sys
 
@@ -18,21 +25,37 @@ class chatReader:
         self.choice = choice
         try:
             # Read the C++ files
-            trie_cpp_file_contents = readfile('backend/trie.cpp')
-            hash_file_contents = readfile('backend/hashmap.cpp')
+            if os_is_windows():
+                trie_cpp_file_contents = readfile('backend/trie.cpp')
+                hash_file_contents = readfile('backend/hashmap.cpp')
+
+                cppyy.cppdef(trie_cpp_file_contents)
+                cppyy.cppdef(hash_file_contents)
+
 
             print('hello.')
-            cppyy.cppdef(trie_cpp_file_contents)
+            
             print('i am testing.')
-            cppyy.cppdef(hash_file_contents)
+            
             print('i made it through.')
         except SyntaxError:
             pass
 
-        self.trie_object = cppyy.gbl.trie()  # Create Trie object
-        self.trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")  # Build Trie
-        self.hash_obj = cppyy.gbl.hashmap()  # Create Hash Map object
-        self.hash_obj.buildHashmap("bad-words.txt")  # Build Hash Map
+        if os_is_windows():
+            # Handle processing with Trie
+            self.trie_object = cppyy.gbl.trie()
+            self.trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")
+
+        elif os_is_linux():
+            self.trie_object = trie.trie()
+            self.trie_object.buildTrieFromBadPhrasesFile("/home/toxicterminator/ToxicTerminator/bad-words.txt")
+
+        if os_is_windows():
+            self.hash_obj = cppyy.gbl.hashmap()
+            self.hash_obj.buildHashmap("bad-words.txt")
+        elif os_is_linux():
+            self.hash_obj = hashmap.hashmap()
+            self.hash_obj.buildHashmap("/home/toxicterminator/ToxicTerminator/bad-words.txt")
         # Read CSV file into a DataFrame
         self.df = pd.read_csv(f'backend/chats/{choices[choice]}')
         # Assuming df is your DataFrame

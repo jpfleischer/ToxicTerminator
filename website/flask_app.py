@@ -17,7 +17,7 @@ elif os_is_linux():
     import sys
     sys.path.insert(0, '/home/toxicterminator/ToxicTerminator')
     from backend import trie
-    
+    from backend import hashmap
 
 import sys
 # caution: path[0] is reserved for script path (or '' in REPL)
@@ -172,11 +172,18 @@ def live_updates(game, data_structure):
 def get_random_message(game_id):
     print('who dares enter')
     # Define the file paths for each game's CSV
-    game_csv_paths = {
-        'tf2': 'backend/chats/tf2100k-short.csv',
-        'minecraft': 'backend/chats/minecraft260k-short.csv',
-        'dota2': 'backend/chats/dota2-620k-short.csv'
-    }
+    if os_is_linux():
+        game_csv_paths = {
+            'tf2': '/home/toxicterminator/ToxicTerminator/backend/chats/tf2100k-short.csv',
+            'minecraft': '/home/toxicterminator/ToxicTerminator/backend/chats/minecraft260k-short.csv',
+            'dota2': '/home/toxicterminator/ToxicTerminator/backend/chats/dota2-620k-short.csv'
+        }
+    else:
+        game_csv_paths = {
+            'tf2': 'backend/chats/tf2100k-short.csv',
+            'minecraft': 'backend/chats/minecraft260k-short.csv',
+            'dota2': 'backend/chats/dota2-620k-short.csv'
+        }
 
     if game_id in game_csv_paths:
         csv_path = game_csv_paths[game_id]
