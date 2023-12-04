@@ -17,8 +17,10 @@ cd
 
 git clone https://github.com/jpfleischer/ToxicTerminator.git
 cd ToxicTerminator
+
+# this will take around 350 MB
 make
-# now you have the bad words list.
+# now you have the bad words list and the chats.
 
 make serve
 ```

@@ -22,9 +22,9 @@ class chatReader:
             }
         else:
             choices = {
-                'Team Fortress 2': "/home/toxicterminator/ToxicTerminator/backend/chats/tf2100k.csv",
-                'Minecraft': "/home/toxicterminator/ToxicTerminator/backend/chats/minecraft260k.csv",
-                'Dota 2': "/home/toxicterminator/ToxicTerminator/backend/chats/dota2-620k.csv",
+                'Team Fortress 2': "tf2100k.csv",
+                'Minecraft': "minecraft260k.csv",
+                'Dota 2': "dota2-620k.csv",
             }
         if choice not in choices:
             raise KeyError("please choose Team Fortress 2, " \
@@ -64,7 +64,10 @@ class chatReader:
             self.hash_obj = hashmap.hashmap()
             self.hash_obj.buildHashmap("/home/toxicterminator/ToxicTerminator/bad-words.txt")
         # Read CSV file into a DataFrame
-        self.df = pd.read_csv(f'backend/chats/{choices[choice]}')
+        if os_is_windows():
+            self.df = pd.read_csv(f'backend/chats/{choices[choice]}')
+        else:
+            self.df = pd.read_csv(f'/home/toxicterminator/ToxicTerminator/backend/chats/{choices[choice]}')
         # Assuming df is your DataFrame
         self.df.dropna(subset=['message'], inplace=True)
         # only 100000k !
