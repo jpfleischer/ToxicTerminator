@@ -1,71 +1,141 @@
 from cloudmesh.common.util import readfile
+from cloudmesh.common.StopWatch import StopWatch
 import pandas as pd
 import cppyy
 import random
+import sys
 
-# Read the C++ files
-trie_cpp_file_contents = readfile('backend/trie.cpp')
-hash_file_contents = readfile('backend/hashmap.cpp')
+class chatReader:
+    def __init__(self, choice: str, structure: str="both"):
+        choices = {
+            'Team Fortress 2': "tf2100k.csv",
+            'Minecraft': "minecraft260k.csv",
+            'Dota 2': "dota2-620k.csv",
+        }
+        if choice not in choices:
+            raise KeyError("please choose Team Fortress 2, " \
+                           "Minecraft, or Dota 2.")
+        self.choice = choice
+        try:
+            # Read the C++ files
+            trie_cpp_file_contents = readfile('backend/trie.cpp')
+            hash_file_contents = readfile('backend/hashmap.cpp')
 
-print('hello.')
-cppyy.cppdef(trie_cpp_file_contents)
-print('i am testing.')
-cppyy.cppdef(hash_file_contents)
-print('i made it through.')
-trie_object = cppyy.gbl.trie()  # Create Trie object
-trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")  # Build Trie
-hash_obj = cppyy.gbl.hashmap()  # Create Hash Map object
-hash_obj.buildHashmap("bad-words.txt")  # Build Hash Map
+            print('hello.')
+            cppyy.cppdef(trie_cpp_file_contents)
+            print('i am testing.')
+            cppyy.cppdef(hash_file_contents)
+            print('i made it through.')
+        except SyntaxError:
+            pass
+
+        self.trie_object = cppyy.gbl.trie()  # Create Trie object
+        self.trie_object.buildTrieFromBadPhrasesFile("bad-words.txt")  # Build Trie
+        self.hash_obj = cppyy.gbl.hashmap()  # Create Hash Map object
+        self.hash_obj.buildHashmap("bad-words.txt")  # Build Hash Map
+        # Read CSV file into a DataFrame
+        self.df = pd.read_csv(f'backend/chats/{choices[choice]}')
+        # Assuming df is your DataFrame
+        self.df.dropna(subset=['message'], inplace=True)
+        # only 100000k !
+        self.df = self.df.head(100000)
+        
+        
+
+    # Define Trie and Hash Map logic functions
+    def check_message_with_trie(self, message):
+
+        return self.trie_object.search(message)  # Check message using Trie
+
+    def check_message_with_hashmap(self, message):
+
+        return self.hash_obj.search(message)  # Check message using Hash Map
+
+    # Function to process messages from DataFrame
+    def process_messages(self, df, datastruc: str):
+        """
+        data struc can be trie or hashmap
+        """
+        problem_errors = []
+        true_count = 0
+        try:
+            if datastruc == 'trie':
+                print('trie')
+                # Apply Trie logic to each message
+                true_count = df['message'].apply(lambda x: self.check_message_with_trie(x)).sum()
+            else:
+                print('has')
+                true_count = df['message'].apply(lambda x: self.check_message_with_hashmap(x)).sum()
+        except TypeError as e:
+            problem_errors.append(e)  # Store the problematic message causing TypeError
+        
+        false_count = len(df) - true_count
+        return true_count, false_count, problem_errors  # Return counts and problematic messages
 
 
-# Define Trie and Hash Map logic functions
-def check_message_with_trie(message):
+    def process_messages_route(self, struc: str):
+        almighty_dictionary = \
+        {
+            struc: {
+                'game_name': None,
+                'true_count': None,
+                'false_count': None,
+                'total_count': None,
+                'problem_errors': None,
+                'time': None,
+                'percent': None,
+                'example_bad_phrases': None
+            }
+        }
 
-    return trie_object.search(message)  # Check message using Trie
+        # for struc in ['trie', 'hashmap']:
+        print('#'*40, struc, '#'*40)
+        
+        StopWatch.start('timer')
+        true_count, false_count, problem_errors = self.process_messages(self.df, struc)  # Process messages
+        StopWatch.stop('timer')
+        time_almighty = StopWatch.get('timer')
+        print(problem_errors)
 
-def check_message_with_hashmap(message):
+        num_msgs = len(self.df)
 
-    return hash_obj.search(message)  # Check message using Hash Map
+        print(f'True Count: {true_count}, False Count: {false_count}')
+        percent = (true_count / num_msgs) * 100  # Convert to percentage
+        print(f'Bad words are {percent:.2f}% of {num_msgs} total messages')  # Display as percentage with 2 decimal places
 
-# Function to process messages from DataFrame
-def process_messages(df):
-    problematic_messages = []
-    true_count = 0
-    try:
-        # Apply Trie logic to each message
-        true_count = df['message'].apply(lambda x: check_message_with_trie(x)).sum()
-    except TypeError as e:
-        problematic_messages.append(e)  # Store the problematic message causing TypeError
-    
-    false_count = len(df) - true_count
-    return true_count, false_count, problematic_messages  # Return counts and problematic messages
+        if struc == 'trie':
+            # Get indices of True messages
+            true_indices = self.df[self.df['message'].apply(self.check_message_with_trie)].index.tolist()
+        elif struc == 'hashmap':
+            true_indices = self.df[self.df['message'].apply(self.check_message_with_hashmap)].index.tolist()
+        else:
 
+            raise KeyError(f'you didnt choose right one {struc}')
 
-# Read CSV file into a DataFrame
-df = pd.read_csv('backend/chats/tf2100k.csv')
-# Assuming df is your DataFrame
-df.dropna(subset=['message'], inplace=True)
-num_msgs = len(df)
+        # Randomly select 10 indices
+        random_true_indices = random.sample(true_indices, min(10, len(true_indices)))
 
+        # Print the selected messages
+        print("\nTen random messages that were flagged as 'True':")
+        for index in random_true_indices:
+            print(self.df.loc[index, 'message'])
 
-def process_messages_route():
-    true_count, false_count, problematic_messages = process_messages(df)  # Process messages
-    print(problematic_messages)
-    print(f'True Count: {true_count}, False Count: {false_count}')
-    percent = (true_count / num_msgs) * 100  # Convert to percentage
-    print(f'Bad words are {percent:.2f}% of {num_msgs} total messages')  # Display as percentage with 2 decimal places
-
-    # Get indices of True messages
-    true_indices = df[df['message'].apply(check_message_with_trie)].index.tolist()
-
-    # Randomly select 10 indices
-    random_true_indices = random.sample(true_indices, min(10, len(true_indices)))
-
-    # Print the selected messages
-    print("\nTen random messages that were flagged as 'True':")
-    for index in random_true_indices:
-        print(df.loc[index, 'message'])
+        almighty_dictionary[struc] = {
+            'game_name': self.choice,
+            'true_count': true_count,
+            'false_count': false_count,
+            'total_count': len(self.df),
+            'problem_errors': problem_errors,
+            'time': f'{time_almighty} seconds',
+            'percent': f'{percent:.2f}%',
+            'example_bad_phrases': [self.df.loc[index, 'message'] for index in random_true_indices]
+        }
+        return almighty_dictionary
 
 
 if __name__ == "__main__":
-    process_messages_route()
+    choice = sys.argv[1]
+    print(choice)
+    obj = chatReader(choice)
+
+    obj.process_messages_route()

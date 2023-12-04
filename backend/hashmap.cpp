@@ -5,6 +5,7 @@
 #include <cctype>
 #include <string>
 #include <sstream>
+#include <vector>
 
 class hashmap
 {

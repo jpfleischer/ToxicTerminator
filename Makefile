@@ -23,7 +23,7 @@ serve:
 	# python website/run.py
 
 process:
-	python backend/chats/process.py
+	python backend/chats/process.py "Team Fortress 2"
 
 # this is a makefile that allows us to use
 # the make command
