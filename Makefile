@@ -8,7 +8,7 @@ run:
 	else \
 		echo "'$(file_name)' already exists"; \
 	fi
-
+	python backend/chats/get-chats.py
 	# g++ -o trie backend/trie.cpp
 	# ./trie
 
