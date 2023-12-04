@@ -8,7 +8,7 @@ run:
 	else \
 		echo "'$(file_name)' already exists"; \
 	fi
-	cd backend/chats & make;
+	cd backend/chats ; make;
 	# g++ -o trie backend/trie.cpp
 	# ./trie
 
