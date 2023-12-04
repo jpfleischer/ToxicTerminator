@@ -11,9 +11,14 @@ import time
 
 from cloudmesh.common.util import readfile
 from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.systeminfo import os_is_windows, os_is_linux
 from queue import Queue
 import numpy as np
-import cppyy
+
+if os_is_windows():
+    import cppyy
+# elif os_is_linux():
+    
 
 import sys
 # caution: path[0] is reserved for script path (or '' in REPL)
@@ -30,11 +35,12 @@ app = Flask(__name__)
 @app.route('/query', methods=['POST'])
 def query():
     try:
-        trie_cpp_file_contents = readfile('backend/trie.cpp')
-        hash_file_contents = readfile('backend/hashmap.cpp')
+        if os_is_windows():
+            trie_cpp_file_contents = readfile('backend/trie.cpp')
+            hash_file_contents = readfile('backend/hashmap.cpp')
 
-        cppyy.cppdef(trie_cpp_file_contents)
-        cppyy.cppdef(hash_file_contents)
+            cppyy.cppdef(trie_cpp_file_contents)
+            cppyy.cppdef(hash_file_contents)
 
         
     except SyntaxError:
