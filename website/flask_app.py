@@ -172,7 +172,7 @@ def live_updates(game, data_structure):
 def get_random_message(game_id):
     print('who dares enter')
     # Define the file paths for each game's CSV
-    if os_is_windows:
+    if os_is_windows():
         game_csv_paths = {
             'tf2': 'backend/chats/tf2100k-short.csv',
             'minecraft': 'backend/chats/minecraft260k-short.csv',
