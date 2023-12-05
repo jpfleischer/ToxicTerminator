@@ -2,7 +2,8 @@
 
 Visit our website at https://toxicterminator.pythonanywhere.com/
 
-![](http://g.recordit.co/9Q8q3CkWGo.gif)
+
+<img src="http://g.recordit.co/9Q8q3CkWGo.gif" width="40" height="40" />
 
 setup is simple. the only prerequisite
 is chocolatey https://chocolatey.org/
