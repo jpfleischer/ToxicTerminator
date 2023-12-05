@@ -1,10 +1,20 @@
 # ToxicTerminator
 
-Visit our website at https://toxicterminator.pythonanywhere.com/
+<font size=4>Visit our website at https://toxicterminator.pythonanywhere.com/</font>
 
 ![](demo.gif)
 
-setup is simple. the only prerequisite
+<font size=4><u>The question: can we quantify toxicity in online video games?</u></font>
+
+ToxicTerminator is a fullstack app that is meant to demonstrate simple data structures that scan for blacklisted phrases within chat messages. It features a live sandbox for testing user-inputted messages as well as random video game messages taken from real datasets.
+
+The app also has a page for comprehensively testing 100k datapoints from each game and measuring each game's total toxicity. This is made possible by the C++ backend sending live updates to the Python frontend, made with Flask.
+
+This project is an example of use of the [cloudmesh toolkit](https://cloudmesh.github.io/), a Python library meant to make cloud computing easier.
+
+## Setup
+
+Setup is simple. The only prerequisite
 is chocolatey https://chocolatey.org/
 
 Then open a terminal. Git Bash is the best but
@@ -37,4 +47,4 @@ make
 make serve
 ```
 
-Then open a browser and go to 127.0.0.1:5000
+Then open a browser and go to [127.0.0.1:5000](127.0.0.1:5000)
