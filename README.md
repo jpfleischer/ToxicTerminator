@@ -40,6 +40,8 @@ source ~/ENV3/Scripts/activate
 # if using powershell
 . ~/ENV3/Scripts/activate.ps1
 
+pip install -r requirements.txt
+
 # this will take around 350 MB
 make
 # now you have the bad words list and the chats.
