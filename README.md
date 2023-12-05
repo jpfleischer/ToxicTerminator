@@ -1,5 +1,9 @@
 # ToxicTerminator
 
+Visit our website at https://toxicterminator.pythonanywhere.com/
+
+![](http://g.recordit.co/9Q8q3CkWGo.gif)
+
 setup is simple. the only prerequisite
 is chocolatey https://chocolatey.org/
 
@@ -17,6 +21,14 @@ cd
 
 git clone https://github.com/jpfleischer/ToxicTerminator.git
 cd ToxicTerminator
+
+# make and activate a venv
+python -m venv ~/ENV3
+
+# if using git bash
+source ~/ENV3/Scripts/activate
+# if using powershell
+. ~/ENV3/Scripts/activate.ps1
 
 # this will take around 350 MB
 make
